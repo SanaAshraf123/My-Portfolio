@@ -15,7 +15,6 @@ import {
 import UniImg from "../assets/university.png";
 import Pny from "../assets/pny.png";
 import CourseraImg from "../assets/coursera.png";    
-import GoogleImg from "../assets/google.png";    
 
 const TABS = [
   { id: "education", label: "Education", icon: FaGraduationCap },
@@ -50,7 +49,7 @@ const EducationAndTestimonials = ({ isLightMode }) => {
       type: "image",
     },
     {
-      img: GoogleImg,
+      img: null,
       title: "Google UX Design Professional",
       org: "Google via Coursera",
       type: "image",
@@ -306,7 +305,11 @@ const EducationAndTestimonials = ({ isLightMode }) => {
                         <div className={`w-10 h-10 mb-3 rounded-lg border flex items-center justify-center p-1.5 ${
                           isLightMode ? 'bg-cyan-50 border-cyan-200' : 'bg-cyan-500/10 border-cyan-500/20'
                         }`}>
-                          <img src={cert.img} className="w-full h-full object-contain rounded" alt={cert.title} />
+                          {cert.img ? (
+                            <img src={cert.img} className="w-full h-full object-contain rounded" alt={cert.title} />
+                          ) : (
+                            <FaCertificate className="text-cyan-500 text-xl" />
+                          )}
                         </div>
                         <h4 className={`text-sm font-bold transition-colors mb-0.5 ${
                           isLightMode ? 'text-gray-900 group-hover:text-cyan-600' : 'text-white group-hover:text-cyan-400'
