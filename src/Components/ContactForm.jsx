@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import emailjs from "emailjs-com";
+import emailjs from "@emailjs/browser";
 import { MdOutlineEmail } from "react-icons/md";
 import { CiLinkedin } from "react-icons/ci";
-import { FaGithub, FaPaperPlane } from "react-icons/fa";
+import { SiUpwork, SiBehance } from "react-icons/si";
+import { FaPaperPlane } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 const ContactForm = () => {
@@ -51,16 +52,21 @@ const ContactForm = () => {
       return;
     }
     try {
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_name: "Sana Ashraf",
+        reply_to: formData.email,
+        from_contact: "N/A",
+      };
 
-      // iahan pir service id dani ha or Template id or user id 
       const response = await emailjs.send(
-        "YOUR_SERVICE_ID", 
-        "YOUR_TEMPLATE_ID", 
-        formData, 
-        "YOUR_USER_ID"
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
-      
-
 
       if (response.status === 200) {
         setFormStatus("Message sent successfully!");
@@ -69,165 +75,217 @@ const ContactForm = () => {
         setFormStatus("Something went wrong, please try again.");
       }
     } catch (error) {
-      setFormStatus(`Something went wrong - ${error}`);
+      setFormStatus(`Something went wrong - ${error.text || error.message}`);
+    }
+  };
+
+  const floatingPills = [
+    { title: "Brand Identity", rotate: "-6deg" },
+    { title: "Custom Merch", rotate: "8deg" },
+    { title: "Printing Work", rotate: "-4deg" },
+    { title: "Graphic Design", rotate: "6deg" },
+    { title: "Social Design", rotate: "-8deg" },
+  ];
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 25 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.5, ease: "easeOut" } 
     }
   };
 
   return (
-    <section id="Contact" className="relative p-8 md:p-16 lg:p-24 text-white min-h-screen bg-gradient-to-br from-[#1a1a1d] via-[#2d1a24] to-[#3b1c32]">
-      <div className="absolute inset-0 bg-[url('/subtle-grid.png')] opacity-10"></div>
-      
+    <section 
+      id="Contact" 
+      className="relative py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 lg:px-20 min-h-screen overflow-hidden bg-[#121016] text-white"
+    >
+      <div className="absolute top-1/4 left-0 w-48 h-48 md:w-96 md:h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 right-0 w-48 h-48 md:w-96 md:h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+
       <motion.div 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: isMounted ? 1 : 0, y: isMounted ? 0 : 50 }}
-        transition={{ duration: 0.8 }}
-        className="relative w-full max-w-6xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        className="relative z-10 w-full max-w-6xl mx-auto"
       >
-        <div className="bg-glass backdrop-blur-xl rounded-2xl shadow-2xl p-8 md:p-12 border border-white/10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-12 text-center bg-gradient-to-r from-[#FF7EB3] to-[#A64D79] bg-clip-text text-transparent">
-            Get in Touch
-          </h1>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Contact Information */}
-            <div className="space-y-8">
-              <motion.div 
-                initial={{ x: -50 }}
-                animate={{ x: 0 }}
-                className="p-6 rounded-xl bg-gradient-to-br from-[#ffffff08] to-[#ffffff02] border border-white/5"
+        <motion.div variants={itemVariants} className="text-center mb-16 pt-4">
+          <span className="text-cyan-400 font-semibold tracking-[0.25em] uppercase text-xs block mb-3">
+            READY TO COLLABORATE
+          </span>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-3 text-white">
+            Got a Dream Project?<span className="text-cyan-400">✨</span>
+          </h2>
+          <p className="text-base sm:text-xl font-light max-w-xl mx-auto text-gray-300">
+            Let's Create It Together!
+          </p>
+
+          <div className="flex flex-wrap justify-center items-center gap-3 sm:gap-4 mt-8 max-w-4xl mx-auto overflow-hidden px-2">
+            {floatingPills.map((pill, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+                whileHover={{ scale: 1.05, y: -3 }}
+                style={{ rotate: pill.rotate }}
+                className="px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold backdrop-blur-md cursor-default border shadow-sm bg-[#121016] border-cyan-500/30 text-cyan-400 shadow-[0_0_15px_rgba(0,255,255,0.15)]"
               >
-                <h2 className="text-2xl font-semibold mb-6 text-[#FF7EB3]">Connect With Me</h2>
-                <ul className="space-y-6">
-                  <li className="flex items-center gap-4 group">
-                    <div className="p-3 rounded-lg bg-[#A64D79] group-hover:bg-[#FF7EB3] transition-colors">
-                      <MdOutlineEmail size={24} className="text-white" />
+                {pill.title}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div 
+          variants={itemVariants}
+          className="rounded-3xl border p-6 sm:p-8 md:p-12 shadow-2xl backdrop-blur-xl bg-[#121016] border-cyan-500/20 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]"
+        >
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 items-start">
+            
+            <div className="space-y-6">
+              <div className="rounded-2xl border p-6 sm:p-8 bg-[#121016] border-cyan-500/25">
+                <h3 className="text-xl font-bold mb-2 text-white">
+                  Let's talk about everything!
+                </h3>
+                <p className="text-sm mb-8 font-light text-gray-400">
+                  Don't like forms? Send me an email directly or connect with me on my professional profiles.
+                </p>
+
+                <ul className="space-y-5">
+                  <motion.li whileHover={{ x: 5 }} className="flex items-center gap-4 group cursor-pointer">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-cyan-500 text-black shadow-lg shadow-cyan-500/30 font-bold">
+                      <MdOutlineEmail className="h-5 w-5" />
                     </div>
-                    <span className="text-[#d1d1d1] group-hover:text-[#FF7EB3] transition-colors">
-                      eshas2453@gmail.com
+                    <span className="text-sm sm:text-base transition-colors break-all text-gray-300 group-hover:text-cyan-400">
+                      iamsanaashraf999@gmail.com
                     </span>
-                  </li>
-                  <a href="https://www.linkedin.com/in/eshashakir" target="_blank" rel="noopener noreferrer" className="block">
-                    <li className="flex items-center gap-4 group">
-                      <div className="p-3 rounded-lg bg-[#A64D79] group-hover:bg-[#FF7EB3] transition-colors">
-                        <CiLinkedin size={24} className="text-white" />
+                  </motion.li>
+
+                  <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="block">
+                    <motion.li whileHover={{ x: 5 }} className="flex items-center gap-4 group">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-purple-600 text-white shadow-lg shadow-purple-600/30 font-bold">
+                        <CiLinkedin className="h-6 w-6" />
                       </div>
-                      <span className="text-[#d1d1d1] group-hover:text-[#FF7EB3] transition-colors">
-                        in/eshashakir
+                      <span className="text-sm sm:text-base transition-colors text-gray-300 group-hover:text-purple-400">
+                        LinkedIn Profile
                       </span>
-                    </li>
+                    </motion.li>
                   </a>
-                  <a href="https://github.com/eshashakir" target="_blank" rel="noopener noreferrer" className="block">
-                    <li className="flex items-center gap-4 group">
-                      <div className="p-3 rounded-lg bg-[#A64D79] group-hover:bg-[#FF7EB3] transition-colors">
-                        <FaGithub size={24} className="text-white" />
+
+                  <a href="https://www.behance.net" target="_blank" rel="noopener noreferrer" className="block">
+                    <motion.li whileHover={{ x: 5 }} className="flex items-center gap-4 group">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-600/30 font-bold">
+                        <SiBehance className="h-5 w-5" />
                       </div>
-                      <span className="text-[#d1d1d1] group-hover:text-[#FF7EB3] transition-colors">
-                        github/eshashakir
+                      <span className="text-sm sm:text-base transition-colors text-gray-300 group-hover:text-blue-400">
+                        Behance Portfolio
                       </span>
-                    </li>
+                    </motion.li>
+                  </a>
+
+                  <a href="https://www.upwork.com" target="_blank" rel="noopener noreferrer" className="block">
+                    <motion.li whileHover={{ x: 5 }} className="flex items-center gap-4 group">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-500 text-black shadow-lg shadow-emerald-500/30 font-bold">
+                        <SiUpwork className="h-5 w-5" />
+                      </div>
+                      <span className="text-sm sm:text-base transition-colors text-gray-300 group-hover:text-emerald-400">
+                        Upwork Profile
+                      </span>
+                    </motion.li>
                   </a>
                 </ul>
-              </motion.div>
-
-              <div className="hidden lg:block relative h-full">
-                <div className="absolute inset-0 bg-gradient-to-br from-[#FF7EB366] to-[#A64D7966] blur-[100px] opacity-30"></div>
-                <div className="relative h-full rounded-xl border border-white/10 bg-[#ffffff05] backdrop-blur-sm"></div>
               </div>
             </div>
 
-            {/* Contact Form */}
-            {/* idher handle submit ka functio n use ho raha jo email send kara ga  */}
-            <motion.form 
+            <motion.form
               onSubmit={handleSubmit}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="space-y-6"
+              className="space-y-5"
             >
-              <div className="relative">
-                <input 
-                  type="text" 
-                  id="name" 
-                  name="name" 
+              <div>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full p-4 bg-[#ffffff0d] border border-white/10 rounded-xl text-white placeholder-[#ffffff50] focus:outline-none focus:border-[#FF7EB3] focus:ring-2 focus:ring-[#FF7EB333] transition-all"
-                  placeholder=" "
+                  className="w-full rounded-xl border p-4 text-sm transition-all focus:outline-none focus:ring-2 bg-[#121016] border-cyan-500/25 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400/30"
+                  placeholder="Your Name"
                 />
-                <label 
-                  htmlFor="name" 
-                  className="absolute left-4 top-2 text-[#ffffff80] pointer-events-none transition-all duration-300"
-                >
-                  Name
-                </label>
-                {errors.name && <p className="text-[#FF6F61] text-sm mt-2 ml-2">{errors.name}</p>}
+                {errors.name && <p className="mt-1.5 text-xs text-red-400 ml-1">{errors.name}</p>}
               </div>
 
-              <div className="relative">
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email" 
+              <div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full p-4 bg-[#ffffff0d] border border-white/10 rounded-xl text-white placeholder-[#ffffff50] focus:outline-none focus:border-[#FF7EB3] focus:ring-2 focus:ring-[#FF7EB333] transition-all"
-                  placeholder=" "
+                  className="w-full rounded-xl border p-4 text-sm transition-all focus:outline-none focus:ring-2 bg-[#121016] border-cyan-500/25 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400/30"
+                  placeholder="your.email@example.com"
+                  autoComplete="email"
                 />
-                <label 
-                  htmlFor="email" 
-                  className="absolute left-4 top-2 text-[#ffffff80] pointer-events-none transition-all duration-300"
-                >
-                  Email
-                </label>
-                {errors.email && <p className="text-[#FF6F61] text-sm mt-2 ml-2">{errors.email}</p>}
+                {errors.email && <p className="mt-1.5 text-xs text-red-400 ml-1">{errors.email}</p>}
               </div>
 
-              <div className="relative">
-                <textarea 
-                  id="message" 
-                  name="message" 
+              <div>
+                <textarea
+                  id="message"
+                  name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  className="w-full p-4 bg-[#ffffff0d] border border-white/10 rounded-xl text-white placeholder-[#ffffff50] focus:outline-none focus:border-[#FF7EB3] focus:ring-2 focus:ring-[#FF7EB333] transition-all resize-none"
-                  placeholder=" "
+                  className="w-full resize-none rounded-xl border p-4 text-sm transition-all focus:outline-none focus:ring-2 bg-[#121016] border-cyan-500/25 text-white placeholder-gray-500 focus:border-cyan-400 focus:ring-cyan-400/30"
+                  placeholder="Tell me about your project or idea..."
                   rows="4"
                 />
-                <label 
-                  htmlFor="message" 
-                  className="absolute left-4 top-2 text-[#ffffff80] pointer-events-none transition-all duration-300"
-                >
-                  Message
-                </label>
-                {errors.message && <p className="text-[#FF6F61] text-sm mt-2 ml-2">{errors.message}</p>}
+                {errors.message && <p className="mt-1.5 text-xs text-red-400 ml-1">{errors.message}</p>}
               </div>
 
               <motion.button 
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(0, 217, 255, 0.4)" }}
                 whileTap={{ scale: 0.98 }}
                 type="submit" 
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-[#FF7EB3] to-[#A64D79] text-white py-4 px-8 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#FF7EB333] transition-all"
+                className="w-full flex items-center justify-center gap-3 bg-cyan-400 text-black py-4 px-8 rounded-xl text-base font-bold shadow-lg shadow-cyan-400/20 hover:bg-cyan-300 transition-all cursor-pointer"
               >
-                <FaPaperPlane className="text-lg" />
-                Send Message
+                <FaPaperPlane className="text-sm" />
+                <span>Send Message</span>
               </motion.button>
 
               {formStatus && (
-                <div className={`mt-4 p-3 rounded-lg text-center text-sm ${
-                  formStatus.includes("successfully") 
-                    ? "bg-green-900/30 text-green-400" 
-                    : "bg-red-900/30 text-red-400"
-                }`}>
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`p-3 rounded-xl text-center text-sm border ${
+                    formStatus.includes("successfully") 
+                      ? "border-green-500/30 text-green-400 bg-green-500/10" 
+                      : "border-red-500/30 text-red-400 bg-red-500/10"
+                  }`}
+                >
                   {formStatus}
-                </div>
+                </motion.div>
               )}
             </motion.form>
+
           </div>
-        </div>
+        </motion.div>
       </motion.div>
     </section>
   );
 };
 
 export default ContactForm;
-
-
